@@ -29,86 +29,38 @@ export class SellerController{
         const venda : VendaRequest = req.body;
         const product = await db.select().from(products)
             .where(eq(products.sku, venda.sku));
-
-        const preco : number = getPrecoProduto(venda.pagamento,
-            product[0].precoCheio, product[0].precoDescontado);
-        
-        const somaProduto : number = getSomaProduto(venda.qutd, preco);
-
-        const adicionalPrazo : number = getAdicionalPrazo(preco, venda.prazo);
-        
-        // Aqui entraria função de cálculo de frete
-        const frete = venda.frete
-
-        const maxDiscount : number = getDescontoMaximo(venda.prazo, frete, preco);
-
-        const desconto : number = getDiscount(venda.desconto, preco);
-
-        const valorTotal : number = getValorTotal(somaProduto, frete, adicionalPrazo, desconto) 
         
         const vendaInfo = saleInformationsHandler(venda.pagamento,product[0].precoCheio, product[0].precoDescontado,
             venda.qutd, venda.prazo, venda.frete, venda.desconto
         ) 
-        res.json(vendaInfo);
+
+        let model : any = vendas
+        let isSalesRequest = false;
+
+        if (venda.desconto > vendaInfo.descontoMaximo){
+            //cadastra uma solicitação
+            model = pedidos
+            isSalesRequest = true;
+        }
+
+        const result = await db.insert(model).values({
+            sku: venda.sku,
+            qutd: venda.qutd,
+            somaProduto: vendaInfo.somaProduto, // dinamico
+            frete: vendaInfo.frete, // dinamico
+            prazo: venda.prazo, 
+            desconto: venda.desconto, 
+            descontoMaximo: vendaInfo.descontoMaximo, // dinamico
+            pagamento : venda.pagamento,
+            valorTotalVenda : vendaInfo.valorTotal,
+            userId: req.user.id, // dinamico
+        }).returning();
+
+        console.log(result)
+      
+        return res.status(201).json({
+            "result" : result,
+            "isSalesRequest" : isSalesRequest
+        })
     }
 }
-
-function getSomaProduto(qutd : number, preco : number){
-    return qutd * preco;
-}; 
-
-function getAdicionalPrazo(preco : number, prazo : Prazo) {
-    let value : number = 0;
-    switch(prazo) {
-        case "TURBO":
-            value = 0.10 * preco;
-            return value;
-        case "SUPER TURBO":
-            value = 0.20 * preco;
-            return value;
-        default:
-            return value;
-    }
-}
-
-function getPrecoProduto(pag : Pagamento, precoCheio : number, precoDescontado : number){
-    if(pag === "cartao"){
-        return precoCheio;
-    }
-    return precoDescontado;
-}
-
-function getValorTotal(somaProdutos : number, frete : number, adicionalPrazo : number, desconto : number){
-    return somaProdutos + frete + adicionalPrazo - desconto;
-}
-
-function getDescontoMaximo(prazo : Prazo, frete : number, preco : number){
-    let value : number = 0;
-    switch(prazo) {
-        case "PADRAO":
-            value = descontoMaximoOperations(preco, 0.05, frete);
-            return value;
-        case "TURBO":
-            value = descontoMaximoOperations(preco, 0.10, frete);
-            return value;
-        case "SUPER TURBO":
-            value = descontoMaximoOperations(preco, 0.20, frete);
-            return value;
-        default:
-            return value;
-    }
-
-}
-
-function descontoMaximoOperations(preco : number, desconto : number, frete : number){
-    let calc : number = desconto * preco ;
-    let arr : number[] = [ frete, calc ];
-    let valorMaior : number = Math.max(...arr);
-    return valorMaior;
-}
-
-function getDiscount(desconto : number, preco : number){
-    let discount : number =  preco * (desconto / 100);
-    return discount;
-}
-

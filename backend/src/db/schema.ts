@@ -40,6 +40,9 @@ export const pedidos = pgTable('pedidos', {
     prazo: prazoEnum('prazo').notNull(),
     desconto: real('desconto'),
     descontoMaximo: real('desconto_maximo').notNull(),
+    pagamento : pagamentoEnum('pagamento').default('pix'),
+    valorTotalVenda: real('valor_total_venda'),
+    // campos pedidos 
     userId: uuid('user_id'),
     aprovado: boolean("aprovado"),
     gerenteId: uuid('gerente_id'),
@@ -68,7 +71,9 @@ export const vendas = pgTable('vendas',{
     desconto: real('desconto'),
     descontoMaximo: real('desconto_maximo').notNull(),
     pagamento : pagamentoEnum('pagamento').default('pix'),
-    userId: uuid('user_id'),
+    valorTotalVenda: real('valor_total_venda'),
+    userId: uuid('user_id')
+    
 });
 
 export const vendasRelations = relations(vendas, ({ one }) => ({
