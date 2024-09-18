@@ -9,9 +9,9 @@ app.use(express.json());
 
 app.use(routes)
 
-app.use((err: any, req : Request, res : Response, next: NextFunction)=>{
-    errorHandler.handle(err,res);
-});
+//app.use((err: any, req : Request, res : Response, next: NextFunction)=>{
+//    errorHandler.handle(err,res);
+//});
 
 
 const port : number = 3333

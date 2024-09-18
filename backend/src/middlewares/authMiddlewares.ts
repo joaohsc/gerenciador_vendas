@@ -13,8 +13,7 @@ export const authMiddleware = async (req : Request, res : Response, next : NextF
     const { authorization } = req.headers;
 
     if (!authorization){
-        res.status(401).send({message: "Acesso não autorizado!"})
-        return;
+        return res.status(401).json({message: "Acesso não autorizado!"});
     }
 
     const token = authorization.split(' ')[1];
@@ -23,8 +22,7 @@ export const authMiddleware = async (req : Request, res : Response, next : NextF
 
     const user = await db.select().from(users).where(eq(users.id, id));
     if (!user[0]) {
-        res.status(400).send({ message: "Acesso não autorizado!" });
-        return;
+        return res.status(400).json({ message: "Acesso não autorizado!" });
     }
 
     const  {password: _, ...loggedUser} = user[0];

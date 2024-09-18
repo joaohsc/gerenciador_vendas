@@ -13,6 +13,8 @@ class ErrorHandler {
             return;
         }
 
+        console.log(error);
+
         res.status(500).json({ message: "Um erro insesperado ocorreu!" });
     }
 }

@@ -61,6 +61,6 @@ export class SellerController{
         return res.status(201).json({
             "result" : result,
             "isSalesRequest" : isSalesRequest
-        })
+        });
     }
 }
