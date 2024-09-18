@@ -56,9 +56,4 @@ export class UserController {
             token: token
         });
     }
-
-    // role: manager
-    async getVendedores(req : Request, res: Response) {
-        return res.json(req.user);
-    }
 }

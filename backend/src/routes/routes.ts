@@ -3,6 +3,8 @@ import { Router, Request, Response } from 'express';
 import { UserController } from '../controllers/userControllers';
 import { authMiddleware } from '../middlewares/authMiddlewares';
 import { roleMiddleware } from '../middlewares/roleMiddleware';
+import { ManagerController } from '../controllers/managerController';
+import { SellerController } from '../controllers/sellerController';
 
 
 const routes : Router = Router();
@@ -29,18 +31,15 @@ routes.get('/vendas', (req : Request, res : Response)=>{
 });
 
 // criar venda
-routes.post('/vendas', (req : Request, res : Response)=>{
-    res.send('registro de vendas');
-});
+routes.post('/vendas', new SellerController().createSale);
 
+// permissão de manager
 routes.use(roleMiddleware);
 // listar vendedores
-routes.get('/vendedores', new UserController().getVendedores);
+routes.get('/vendedores', new ManagerController().getVendedores);
 
 // criar vendedor
-routes.post('/vendedores', (req : Request, res : Response)=>{
-    res.send('registro de vendedores');
-});
+routes.post('/vendedores', new ManagerController().createVendedores);
 
 // aprovar/desaprovar pedido
 routes.post('/pedidos/:id/validar', (req : Request, res : Response)=>{

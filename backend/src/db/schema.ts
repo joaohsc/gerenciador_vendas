@@ -2,20 +2,26 @@ import { pgTable, pgEnum, text, integer, timestamp, uuid, boolean, real } from "
 import { relations } from 'drizzle-orm';
 
 export const roleEnum = pgEnum('role', ['manager', 'seller']);
-export const prazoEnum = pgEnum('prazo', ['PADRÃO', 'TURBO', 'SUPER TURBO']);
+export const prazoEnum = pgEnum('prazo', ['PADRAO', 'TURBO', 'SUPER TURBO']);
+export const pagamentoEnum = pgEnum('pagamento', ['pix', 'boleto','cartao']);
 
 export const users = pgTable('users',{
     id: uuid('id').defaultRandom().primaryKey(),
     username : text('username').notNull(),
     password : text('password').notNull(),
     email: text('email').notNull(),
-    role : roleEnum('role').notNull()
+    role : roleEnum('role').notNull(),
+    createdBy: uuid('created_by')
 });
 
-export const usersRelations = relations(users, ({ many }) => ({
+export const usersRelations = relations(users, ({ one, many }) => ({
     vendas: many(vendas),
     pedidos: many(pedidos, {relationName : 'pedido_user_id'}),
     gestaoPedidos: many(pedidos, {relationName : 'pedido_gerente_id'}),
+    createdBy : one(users, {
+      fields: [users.createdBy],
+      references: [users.id]
+    })
 }));
 
 export const products = pgTable('products',{
@@ -61,6 +67,7 @@ export const vendas = pgTable('vendas',{
     prazo: prazoEnum('prazo').notNull(),
     desconto: real('desconto'),
     descontoMaximo: real('desconto_maximo').notNull(),
+    pagamento : pagamentoEnum('pagamento').default('pix'),
     userId: uuid('user_id'),
 });
 

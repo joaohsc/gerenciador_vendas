@@ -3,8 +3,14 @@ export const enum Role {
     seller =  "seller",
 }
 
-export const enum prazo {
-    padrao = 'PADRÃO', 
+export const enum Prazo {
+    padrao = 'PADRAO', 
     turbo = 'TURBO', 
     superTurbo = 'SUPER TURBO'
+}
+
+export const enum Pagamento {
+   boleto = "boleto",
+   pix = "pix",
+   cartao = "cartao"
 }
