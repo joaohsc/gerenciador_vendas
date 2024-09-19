@@ -1,75 +1,83 @@
-import { useState } from "react";
 import api from "../api";
-import { useNavigate } from "react-router-dom";
-import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants";
+import { useForm, SubmitHandler } from "react-hook-form";
+import "../styles/form.css";
+import Button from "react-bootstrap/Button";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Stack from "react-bootstrap/Stack";
+import Col from "react-bootstrap/Col";
 
-interface FormRequest {
-    route: string;
-    method: string;
+enum roleEnum {
+  seller = "seller",
+  manager = "manager",
 }
 
-function Form({ route, method } : FormRequest) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [username, setUsername] = useState("");
-  const [role, setRole] = useState("");
+interface FormRequest {
+  route: string;
+  method: string;
+}
+type Inputs = {
+  username: string;
+  password: string;
+  email: string;
+  role: roleEnum;
+};
 
-  const navigate = useNavigate();
+function FormRegister({ route, method }: FormRequest) {
+  const { register, handleSubmit, reset } = useForm<Inputs>();
 
-  const name = method === "register" ? "Registro" : "Login";
-
-  const handleSubmit = async (e : React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const onSubmit: SubmitHandler<Inputs> = async (data, e) => {
+    e?.preventDefault();
 
     try {
-        const res = await api.post(route, {email, password})
-        if (method === "login") {
-            localStorage.setItem(ACCESS_TOKEN, res.data.token);
-            localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
-            navigate("/")
-        } else {
-            navigate("/login")
-        }
+      const res = await api.post(route, {
+        username: data.username,
+        password: data.password,
+        email: data.email,
+        role: data.role,
+      });
+      alert("Cadastro realizado com sucesso!");
+      reset();
     } catch (error) {
-        alert(error)
-    } 
+      alert(error);
+    }
   };
+  const formTitle: string =
+    method === "register" ? "Registro" : "Registro de vendedor";
 
   return (
-    <form onSubmit={handleSubmit} className="form-container">
-        <h1>{name}</h1>
-        <input
-        className="form-input"
-        type="text"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        placeholder="Nome do usuário"
-        />
-        <input
-        className="form-input"
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="Senha"
-        />
-        <input
-        className="form-input"
-        type="text"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="Email"
-        />
-        <label htmlFor="roles" >Selecione o cargo:</label>
-        <select name="roles" id="roles" form="roleform" value={role} onChange={(e) => setRole(e.target.value)}>
-            <option value="seller">Vendedor</option>
-            <option value="manager">Gerente</option>
-        </select>
-        <button className="form-button" type="submit">
-            {name}
-        </button>
-    </form>
+    <Container>
+      <Row className="justify-content-md-center">
+        <Col lg="5">
+          <form onSubmit={handleSubmit(onSubmit)} className="form-container">
+            <Stack gap={3}>
+              <h1>{formTitle}</h1>
+              <label>Nome</label>
+              <input className="form-input" {...register("username")} />
+              <label>Senha</label>
+              <input className="form-input" {...register("password")} />
+              <label>Email</label>
+              <input className="form-input" {...register("email")} />
 
+              {method === "register" ? (
+                <div>
+                  <select {...register("role")}>
+                    <option value="seller">Vendedor</option>
+                    <option value="manager">Gerente</option>
+                  </select>
+                </div>
+              ) : null}
+
+              <Button variant="primary" className="form-button" type="submit">
+                Cadastrar
+              </Button>
+              <a href="/login">Fazer o login</a>
+            </Stack>
+          </form>
+        </Col>
+      </Row>
+    </Container>
   );
 }
 
-export default Form
+export default FormRegister;

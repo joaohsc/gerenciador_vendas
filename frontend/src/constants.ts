@@ -1,2 +1,2 @@
 export const ACCESS_TOKEN = "token";
-export const REFRESH_TOKEN = "refresh";
+export const USER_ROLE = "role";

@@ -1,61 +1,65 @@
-import { useState } from "react";
 import api from "../api";
 import { useNavigate } from "react-router-dom";
-import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants";
+import { ACCESS_TOKEN, USER_ROLE } from "../constants";
+import { useForm, SubmitHandler } from "react-hook-form";
+import "../styles/form.css";
+import Button from "react-bootstrap/Button";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Stack from "react-bootstrap/Stack";
+import Col from "react-bootstrap/Col";
 
 interface FormRequest {
-    route: string;
-    method: string;
+  route: string;
 }
 
-function Form({ route, method } : FormRequest) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+type Inputs = {
+  email: string;
+  password: string;
+};
 
+function Form({ route }: FormRequest) {
   const navigate = useNavigate();
+  const { register, handleSubmit } = useForm<Inputs>();
 
-  const name = method === "register" ? "Registro" : "Login";
-
-  const handleSubmit = async (e : React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const onSubmit: SubmitHandler<Inputs> = async (data, e) => {
+    e?.preventDefault();
 
     try {
-        const res = await api.post(route, {email, password})
-        if (method === "login") {
-            localStorage.setItem(ACCESS_TOKEN, res.data.token);
-            localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
-            navigate("/")
-        } else {
-            navigate("/login")
-        }
+      const res = await api.post(route, {
+        email: data.email,
+        password: data.password,
+      });
+
+      localStorage.setItem(ACCESS_TOKEN, res.data.token);
+      localStorage.setItem(USER_ROLE, res.data.role);
+      navigate("/");
     } catch (error) {
-        alert(error)
-    } 
+      alert(error);
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="form-container">
-      <h1>{name}</h1>
-      <input
-        className="form-input"
-        type="text"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="Nome do usuário"
-      />
-      <input
-        className="form-input"
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="Senha"
-      />
-      
-      <button className="form-button" type="submit">
-        {name}
-      </button>
-    </form>
+    <Container>
+      <Row className="justify-content-md-center">
+        <Col lg="5">
+          <form onSubmit={handleSubmit(onSubmit)} className="form-container">
+            <Stack gap={3}>
+              <h1>Login</h1>
+              <label>Email</label>
+              <input className="form-input" {...register("email")} />
+              <label>Senha</label>
+              <input className="form-input" {...register("password")} />
+              <Button variant="primary" className="form-button" type="submit">
+                Login
+              </Button>
+              <a href="/register">Fazer o cadastro</a>
+            </Stack>
+          </form>
+        </Col>
+      </Row>
+    </Container>
   );
 }
 
-export default Form
+export default Form;

@@ -20,5 +20,5 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"]
+  "include": ["src", "../../material-ui-dashboard/dashboard/theme/customizations/charts.ts", "../../material-ui-dashboard/dashboard/theme/customizations/dataGrid.ts", "../../material-ui-dashboard/dashboard/theme/customizations/datePickers.ts", "../../material-ui-dashboard/dashboard/theme/customizations/treeView.ts"]
 }
