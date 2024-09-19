@@ -1,6 +1,6 @@
 import { client, db } from "../db";
 import { Request, response, Response } from "express";
-import { users } from "../db/schema";
+import { users, pedidos } from "../db/schema";
 import { Role } from "../enums";
 import { eq } from "drizzle-orm";
 import bcrypt from 'bcrypt';
@@ -15,6 +15,22 @@ interface UserRequest {
 }
 
 export class ManagerController {
+    async aprovarPedido (req: Request, res: Response){
+        const id : string = req.params.id
+        const pedido = await db.update(pedidos)
+            .set({ aprovado : true })
+            .where(eq(pedidos.id, id)).returning();
+
+        return res.json(pedido)
+    }
+    async reprovarPedido (req: Request, res: Response){
+        const id : string = req.params.id
+        const pedido = await db.update(pedidos)
+            .set({ aprovado : false })
+            .where(eq(pedidos.id, id)).returning();
+
+        return res.json(pedido)
+    }
     async createVendedores (req: Request, res: Response) {
         const user : UserRequest = req.body;
 

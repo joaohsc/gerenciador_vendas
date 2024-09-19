@@ -5,6 +5,20 @@ export const roleEnum = pgEnum('role', ['manager', 'seller']);
 export const prazoEnum = pgEnum('prazo', ['PADRAO', 'TURBO', 'SUPER TURBO']);
 export const pagamentoEnum = pgEnum('pagamento', ['pix', 'boleto','cartao']);
 
+const vendaInfos = {
+  sku: text('sku').references(()=>products.sku, {onDelete: 'cascade'}).notNull(),
+  qutd: integer('qutd').notNull(),
+  somaProduto: real('soma_produto').notNull(),
+  frete: real('frete').notNull(),
+  prazo: prazoEnum('prazo').notNull(),
+  desconto: real('desconto'),
+  descontoMaximo: real('desconto_maximo').notNull(),
+  pagamento : pagamentoEnum('pagamento').default('pix'),
+  valorTotalVenda: real('valor_total_venda'),
+  titulo : text('titulo'),
+  descricao : text('descricao')
+}
+
 export const users = pgTable('users',{
     id: uuid('id').defaultRandom().primaryKey(),
     username : text('username').notNull(),
@@ -33,19 +47,12 @@ export const products = pgTable('products',{
 
 export const pedidos = pgTable('pedidos', {
     id: uuid('id').defaultRandom().primaryKey(),
-    sku: text('sku').references(()=>products.sku, {onDelete: 'cascade'}).notNull(),
-    qutd: integer('qutd').notNull(),
-    somaProduto: real('soma_produto').notNull(),
-    frete: real('frete').notNull(),
-    prazo: prazoEnum('prazo').notNull(),
-    desconto: real('desconto'),
-    descontoMaximo: real('desconto_maximo').notNull(),
-    pagamento : pagamentoEnum('pagamento').default('pix'),
-    valorTotalVenda: real('valor_total_venda'),
+    ...vendaInfos,
     // campos pedidos 
     userId: uuid('user_id'),
     aprovado: boolean("aprovado"),
     gerenteId: uuid('gerente_id'),
+    comentario : text('comentario')
 });
 
 export const pedidosRelations = relations(pedidos, ({ one }) => ({
@@ -63,15 +70,7 @@ export const pedidosRelations = relations(pedidos, ({ one }) => ({
 
 export const vendas = pgTable('vendas',{
     id: uuid('id').defaultRandom().primaryKey(),
-    sku: text('sku').references(()=>products.sku, {onDelete: 'cascade'}).notNull(),
-    qutd: integer('qutd').notNull(),
-    somaProduto: real('soma_produto').notNull(),
-    frete: real('frete').notNull(),
-    prazo: prazoEnum('prazo').notNull(),
-    desconto: real('desconto'),
-    descontoMaximo: real('desconto_maximo').notNull(),
-    pagamento : pagamentoEnum('pagamento').default('pix'),
-    valorTotalVenda: real('valor_total_venda'),
+    ...vendaInfos,
     userId: uuid('user_id')
     
 });
