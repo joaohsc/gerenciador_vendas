@@ -4,8 +4,11 @@ import { errorHandler } from './utils';
 import routes from './routes/routes'
 
 const app = express();
+var cors = require('cors');
 
 app.use(express.json());
+
+app.use(cors())
 
 app.use(routes)
 
