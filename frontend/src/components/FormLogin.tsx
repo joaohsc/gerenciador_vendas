@@ -50,7 +50,7 @@ function Form({ route }: FormRequest) {
               <label>Email</label>
               <input className="form-input" {...register("email")} />
               <label>Senha</label>
-              <input className="form-input" {...register("password")} />
+              <input type="password" className="form-input" {...register("password")} />
               <Button variant="primary" className="form-button" type="submit">
                 Login
               </Button>

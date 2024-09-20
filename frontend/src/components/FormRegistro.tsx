@@ -55,7 +55,7 @@ function FormRegister({ route, method }: FormRequest) {
               <label>Nome</label>
               <input className="form-input" {...register("username")} />
               <label>Senha</label>
-              <input className="form-input" {...register("password")} />
+              <input type="password" className="form-input" {...register("password")} />
               <label>Email</label>
               <input className="form-input" {...register("email")} />
 
@@ -71,7 +71,10 @@ function FormRegister({ route, method }: FormRequest) {
               <Button variant="primary" className="form-button" type="submit">
                 Cadastrar
               </Button>
-              <a href="/login">Fazer o login</a>
+              {method === "register" ? (
+                <a href="/login">Fazer o login</a>
+              ) : null}
+              
             </Stack>
           </form>
         </Col>

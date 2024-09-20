@@ -16,7 +16,6 @@ interface UserProps {
 }
 
 function VendedoresTable({ route }: Props) {
-  
   const [data, setData] = useState<UserProps[]>([]);
   useEffect(() => {
     api
@@ -39,18 +38,24 @@ function VendedoresTable({ route }: Props) {
         </tr>
       </thead>
       <tbody>
-        {data.length > 0
-          ? data.map((item) => (
-              <tr key={item.id}>
-                <td>{item.id}</td>
-                <td>{item.username}</td>
-                <td>{item.email}</td>
-                <td>
-                   <DeleteButton route={"/vendedores/"+item.id} />
-                </td>
-              </tr>
-            ))
-          : (<tr><Alert variant="warning">Nenhum item encontrado!</Alert></tr>)}
+        {data.length > 0 ? (
+          data.map((item) => (
+            <tr key={item.id}>
+              <td>{item.id}</td>
+              <td>{item.username}</td>
+              <td>{item.email}</td>
+              <td>
+                <DeleteButton route={"/vendedores/" + item.id} />
+              </td>
+            </tr>
+          ))
+        ) : (
+          <tr>
+            <td colSpan={3}>
+              <Alert variant="warning">Nenhum item encontrado!</Alert>
+            </td>
+          </tr>
+        )}
       </tbody>
     </Table>
   );

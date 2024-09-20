@@ -98,7 +98,9 @@ function PedidosTable({ route }: Props) {
           ))
         ) : (
           <tr>
-            <Alert variant="warning">Nenhum item encontrado!</Alert>
+            <td colSpan={3}>
+              <Alert variant="warning">Nenhum item encontrado!</Alert>
+            </td>
           </tr>
         )}
       </tbody>
