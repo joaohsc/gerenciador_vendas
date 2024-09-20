@@ -41,6 +41,7 @@ routes.get('/vendedores', new ManagerController().getVendedores);
 
 // criar vendedor
 routes.post('/vendedores', new ManagerController().createVendedores);
+routes.delete('/vendedores/:id', new ManagerController().deleteVendedores);
 
 // aprovar/desaprovar pedido
 routes.put('/pedidos/:id/aprovar', new ManagerController().aprovarPedido);

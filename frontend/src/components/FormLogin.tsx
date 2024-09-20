@@ -32,7 +32,8 @@ function Form({ route }: FormRequest) {
       });
 
       localStorage.setItem(ACCESS_TOKEN, res.data.token);
-      localStorage.setItem(USER_ROLE, res.data.role);
+      localStorage.setItem(USER_ROLE, res.data.user.role);
+      
       navigate("/");
     } catch (error) {
       alert(error);

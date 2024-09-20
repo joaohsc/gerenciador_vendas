@@ -17,6 +17,7 @@ interface UserRequest {
 export class ManagerController {
     async aprovarPedido (req: Request, res: Response){
         const id : string = req.params.id
+        console.log(id)
         const pedido = await db.update(pedidos)
             .set({ aprovado : true })
             .where(eq(pedidos.id, id)).returning();
@@ -55,5 +56,10 @@ export class ManagerController {
         const result = await db.select().from(users).where(eq(users.role, "seller"));
 
         return res.json(result);
+    }
+    async deleteVendedores(req : Request, res: Response) {
+        const id : string = req.params.id
+        const result = await db.delete(users).where(eq(users.id, id));
+        return res.json(result)
     }
 }

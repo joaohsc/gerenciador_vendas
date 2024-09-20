@@ -1,0 +1,38 @@
+.bg-main-color {
+    background-color: #0988A8;
+}
+
+.nav-main-content {
+    width:100%;
+}
+.custom-button {
+    border: none;
+    background: none;
+    cursor: pointer;
+    margin: 0;
+    padding: 4;
+    border: 1px solid #fff;
+    border-radius: 4px; 
+}
+.custom-button:hover {
+    background-color:#fff;
+    color:#0988A8;
+    transition: 0.4s;
+}
+.b-main-button {
+    border: none;
+    background: none;
+    cursor: pointer;
+    margin: 0;
+    padding: 4;
+    color:#fff;
+    background-color: #0988A8;
+    border: 2px solid #0988A8;
+    border-radius: 4px; 
+}
+
+.b-main-button:hover {
+    background-color:#07667e;
+    color:#fff;
+    transition: 0.4s;
+}

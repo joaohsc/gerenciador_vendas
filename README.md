@@ -6,6 +6,13 @@ Projeto gerenciador de vendas. O projeto tem como objetivo gerenciar vendas de b
 
 Tecnologias utilizadas: ReactJS, NodeJS.
 
+# Guia para executar o código
+- Criar os arquivos .env no formato indicado nesse readme;
+- rodar npm i na pasta do backend e frontend
+- rodar o npm run seed na pasta do backend para cadastrar os produtos
+- executar o comando docker compose up -d para inicializar o banco de dados
+- npm run dev na pasta do backend e frontend para abrir o projeto
+
 Exemplo de .env frontend:
 - VITE_API_URL =  "http://localhost:port"
 
